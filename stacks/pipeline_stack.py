@@ -39,16 +39,23 @@ class CdkSampleStack(Stack):
             )
         )
 
-        build_project.role.add_to_role_policy(
-            iam.PolicyStatement(
-                actions=["secretsmanager:GetSecretValue"],
-                resources=["arn:aws:secretsmanager:ap-southeast-1:682853212408:secret:cdk-token"]
-            )
+        secret_policy_statement = iam.PolicyStatement(
+            actions=["secretsmanager:GetSecretValue"],
+            resources=["arn:aws:secretsmanager:ap-southeast-1:682853212408:secret:cdk-token"]
         )
+
+        build_role = iam.Role(self, "BuildProjectRole",
+            assumed_by=iam.ServicePrincipal("codebuild.amazonaws.com")
+        )
+
+        build_role.add_to_policy(secret_policy_statement)
+
+
 
         pipeline = pipelines.CodePipeline(
             self,
             "Pipeline",
+            role=build_role,
             pipeline_name="AjuramPipelineNew",
             synth=pipelines.ShellStep(
                 "Synth",
