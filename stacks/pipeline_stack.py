@@ -96,13 +96,11 @@ class CdkSampleStack(Stack):
                         "pip install -r requirements.txt",  # Ensure dependencies are installed
                         "pytest tests/"  # Run tests using pytest
                     ],
-                    project_options=codebuild.PipelineProjectProps(
-                        logging=codebuild.LoggingOptions(
-                            cloud_watch=codebuild.CloudWatchLoggingOptions(
-                                enabled=True,
-                                log_group=test_log_group,
-                                prefix="test-log"
-                            )
+                    logging=codebuild.LoggingOptions(
+                        cloud_watch=codebuild.CloudWatchLoggingOptions(
+                            enabled=True,
+                            log_group=test_log_group,
+                            prefix="test-log"
                         )
                     )
                 )
