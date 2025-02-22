@@ -89,13 +89,16 @@ class CdkSampleStack(Stack):
 
         pipeline.add_stage(
             stage=TestStage(self, "Test"),
-            post=[
+            pre=[
                 CodeBuildStep(
-                    "RunTests",
-                    commands=[
-                        "pip install -r requirements.txt",  # Ensure dependencies are installed
-                        "python tester.py"  # Run tests using pytest
-                    ]
+                    "CreateTestLog",
+                    logging=codebuild.LoggingOptions(
+                        cloud_watch=codebuild.CloudWatchLoggingOptions(
+                            enabled=True,
+                            log_group=test_log_group,
+                            prefix="test-log"
+                        )
+                    )
                 )
             ]
         )

@@ -4,16 +4,10 @@ from aws_cdk import (
     aws_codebuild as codebuild
     )
 from constructs import Construct
+import subprocess
 
 class TestStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        self.test_log_group = logs.LogGroup(self, "TestLogGroup")
-        self.logging=codebuild.LoggingOptions(
-                    cloud_watch=codebuild.CloudWatchLoggingOptions(
-                        enabled=True,
-                        log_group=self.test_log_group,
-                        prefix="test-log"
-                    )
-                )
+        subprocess.run(["python", "tester.py"])
