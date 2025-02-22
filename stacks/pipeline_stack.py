@@ -33,6 +33,7 @@ class CdkSampleStack(Stack):
                 commands=[
                     "npm install -g aws-cdk",
                     "python -m pip install -r requirements.txt",
+                    "python -m pip list",
                     "npx cdk synth"
                 ]
             )
