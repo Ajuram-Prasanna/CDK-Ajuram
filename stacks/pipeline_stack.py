@@ -16,6 +16,8 @@ from aws_cdk import (
     pipelines as pipelines,
 )
 
+from stages.test_stage import TestStage
+
 def caesar_encrypt(text, shift):
     result = ""
     for i in range(len(text)):
@@ -82,9 +84,7 @@ class CdkSampleStack(Stack):
         )
 
         pipeline.add_stage(
-            stage=Stage(
-                self, "Test"
-            ),
+            stage=TestStage(self, "Test"),
             pre=[
             pipelines.ShellStep(
                 "RunTests",
