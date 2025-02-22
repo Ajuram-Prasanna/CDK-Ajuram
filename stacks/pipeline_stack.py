@@ -92,6 +92,7 @@ class CdkSampleStack(Stack):
             pre=[
                 CodeBuildStep(
                     "CreateTestLog",
+                    commands = [],
                     logging=codebuild.LoggingOptions(
                         cloud_watch=codebuild.CloudWatchLoggingOptions(
                             enabled=True,
