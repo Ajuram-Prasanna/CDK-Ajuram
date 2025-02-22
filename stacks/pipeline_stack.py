@@ -41,6 +41,7 @@ class CdkSampleStack(Stack):
         pipeline = pipelines.CodePipeline(
             self,
             "Pipeline",
+            pipeline_name="AjuramPipelineNew",
             synth=pipelines.ShellStep(
                 "Synth",
                 input=CodePipelineSource.git_hub(
@@ -54,6 +55,12 @@ class CdkSampleStack(Stack):
                 ]
             ),
             code_build_defaults=pipelines.CodeBuildOptions(
-                project=build_project
+                logging=codebuild.LoggingOptions(
+                    cloud_watch=codebuild.CloudWatchLoggingOptions(
+                        enabled=True,
+                        log_group=log_group,
+                        prefix="build-log"
+                    )
+                )
             )
         )
