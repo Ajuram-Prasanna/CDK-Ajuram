@@ -35,5 +35,5 @@ class CdkSampleStack(Stack):
                     "pip install -r requirements.txt",  # Instructs Codebuild to install required packages
                     "npx cdk synth",
                 ]
-            ),
+            )
         )
