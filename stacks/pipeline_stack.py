@@ -2,6 +2,7 @@ from aws_cdk import (
     SecretValue,
     Stack,
     aws_codebuild as codebuild,
+    aws_iam as iam,
     aws_logs as logs,
 )
 from constructs import Construct
@@ -35,7 +36,13 @@ class CdkSampleStack(Stack):
                     log_group=log_group,
                     prefix="build-log"
                 )
-            )
+            ),
+            role_policy=[
+                iam.PolicyStatement(
+                    actions=["secretsmanager:GetSecretValue"],
+                    resources=["arn:aws:secretsmanager:ap-southeast-1:682853212408:secret:cdk-token"]
+                )
+            ]
         )
 
         pipeline = pipelines.CodePipeline(
