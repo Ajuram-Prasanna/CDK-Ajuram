@@ -16,6 +16,8 @@ from aws_cdk import (
     pipelines as pipelines,
 )
 
+from aws_cdk.pipelines import CodePipelineSource, CodePipeline, CodeBuildOptions, CodeBuildStep
+
 from stages.test_stage import TestStage
 
 def caesar_encrypt(text, shift):
@@ -88,21 +90,21 @@ class CdkSampleStack(Stack):
         pipeline.add_stage(
             stage=TestStage(self, "Test"),
             pre=[
-            pipelines.ShellStep(
-                "RunTests",
-                commands=[
-                    "pip install -r requirements.txt",  # Ensure dependencies are installed
-                    "pytest tests/"  # Run tests using pytest
-                ],
-                code_build_defaults=pipelines.CodeBuildOptions(
-                    logging=codebuild.LoggingOptions(
-                        cloud_watch=codebuild.CloudWatchLoggingOptions(
-                            enabled=True,
-                            log_group=test_log_group,
-                            prefix="build-log"
+                CodeBuildStep(
+                    "RunTests",
+                    commands=[
+                        "pip install -r requirements.txt",  # Ensure dependencies are installed
+                        "pytest tests/"  # Run tests using pytest
+                    ],
+                    project_options=codebuild.PipelineProjectProps(
+                        logging=codebuild.LoggingOptions(
+                            cloud_watch=codebuild.CloudWatchLoggingOptions(
+                                enabled=True,
+                                log_group=test_log_group,
+                                prefix="test-log"
+                            )
                         )
                     )
                 )
-            )
-        ]
+            ]
         )
