@@ -103,3 +103,15 @@ class CdkSampleStack(Stack):
                 )
             ]
         )
+
+        pipeline.add_stage(
+            stage=TestStage(self, "DeployLambda"),
+            pre=[
+                CodeBuildStep(
+                    "DeployLambdaFunction",
+                    commands=[
+                        "cdk deploy MyLambdaFunction"  # Deploy the Lambda function
+                    ]
+                )
+            ]
+        )
