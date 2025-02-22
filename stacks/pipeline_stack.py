@@ -94,7 +94,7 @@ class CdkSampleStack(Stack):
                     "RunTests",
                     commands=[
                         "pip install -r requirements.txt",  # Ensure dependencies are installed
-                        "pytest tests/"  # Run tests using pytest
+                        "python tester.py"  # Run tests using pytest
                     ],
                     logging=codebuild.LoggingOptions(
                         cloud_watch=codebuild.CloudWatchLoggingOptions(
