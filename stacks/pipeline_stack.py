@@ -11,7 +11,7 @@ from aws_cdk import (
     Stack,
     pipelines as pipelines,
 )
-class WorkshopPipelineStack(Stack):
+class CdkSampleStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
