@@ -89,7 +89,7 @@ class CdkSampleStack(Stack):
 
         pipeline.add_stage(
             stage=TestStage(self, "Test"),
-            pre=[
+            post=[
                 CodeBuildStep(
                     "RunTests",
                     commands=[
