@@ -4,6 +4,7 @@ from aws_cdk import (
     aws_codebuild as codebuild,
     aws_iam as iam,
     aws_logs as logs,
+    Stage
 )
 from constructs import Construct
 from aws_cdk.pipelines import CodePipelineSource
@@ -77,5 +78,21 @@ class CdkSampleStack(Stack):
                         prefix="build-log"
                     )
                 )
+            )
+        )
+
+        pipeline.add_stage(
+            Stage(
+                self,
+                "Test",
+                pre=[
+                    pipelines.ShellStep(
+                        "RunTests",
+                        commands=[
+                            "pip install -r requirements.txt",  # Ensure dependencies are installed
+                            "pytest tests/"  # Run tests using pytest
+                        ]
+                    )
+                ]
             )
         )
