@@ -82,17 +82,16 @@ class CdkSampleStack(Stack):
         )
 
         pipeline.add_stage(
-            Stage(
-                self,
-                "Test",
-                pre=[
-                    pipelines.ShellStep(
-                        "RunTests",
-                        commands=[
-                            "pip install -r requirements.txt",  # Ensure dependencies are installed
-                            "pytest tests/"  # Run tests using pytest
-                        ]
-                    )
+            stage=Stage(
+                self, "Test"
+            ),
+            pre=[
+            pipelines.ShellStep(
+                "RunTests",
+                commands=[
+                    "pip install -r requirements.txt",  # Ensure dependencies are installed
+                    "pytest tests/"  # Run tests using pytest
                 ]
             )
+        ]
         )
