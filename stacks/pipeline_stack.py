@@ -41,14 +41,15 @@ class CdkSampleStack(Stack):
 
         # Define the build project with logging
         build_project = codebuild.PipelineProject(self, "BuildProject",
-            logging=codebuild.LoggingOptions(
-                cloud_watch=codebuild.CloudWatchLoggingOptions(
-                    enabled=True,
-                    log_group=log_group,
-                    prefix="build-log"
-                )
+        logging=codebuild.LoggingOptions(
+            cloud_watch=codebuild.CloudWatchLoggingOptions(
+                enabled=True,
+                log_group=log_group,
+                prefix="build-log"
             )
-        )
+        ),
+        build_spec=codebuild.BuildSpec.from_source_filename("buildspec.yml")
+    )
 
 
 
