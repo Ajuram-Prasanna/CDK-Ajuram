@@ -36,13 +36,14 @@ class CdkSampleStack(Stack):
                     log_group=log_group,
                     prefix="build-log"
                 )
-            ),
-            role_policy=[
-                iam.PolicyStatement(
-                    actions=["secretsmanager:GetSecretValue"],
-                    resources=["arn:aws:secretsmanager:ap-southeast-1:682853212408:secret:cdk-token"]
-                )
-            ]
+            )
+        )
+
+        build_project.role.add_to_role_policy(
+            iam.PolicyStatement(
+                actions=["secretsmanager:GetSecretValue"],
+                resources=["arn:aws:secretsmanager:ap-southeast-1:682853212408:secret:cdk-token"]
+            )
         )
 
         pipeline = pipelines.CodePipeline(
