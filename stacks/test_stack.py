@@ -10,4 +10,4 @@ class TestStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
-        subprocess.run(["python", "tester.py"])
+        subprocess.run(["python", "test_and_upload.py"])
