@@ -2,6 +2,7 @@ import os
 import zipfile
 import boto3
 import pytest
+import subprocess
 
 lambda_client = boto3.client('lambda', region_name='ap-southeast-1')
 role_arn = 'arn:aws:iam::682853212408:role/cag-baggage-LambdaRole-bDBa4Q3CoVa4'
@@ -42,6 +43,8 @@ def upload(zip_file_path, lambda_function):
         print("Lambda function updated successfully:", response)
 
 for lambda_function in os.listdir('lambdas'):
+    if os.path.exists(f'lambdas/{lambda_function}/requirements.txt'):
+        subprocess.check_call(['pip', 'install', '-r' f'lambdas/{lambda_function}/requirements.txt', '--target', f'lambdas/{lambda_function}'])
     if os.path.isdir(f'lambdas/{lambda_function}/tests'):
         status = True
         for test_file in os.listdir(f'lambdas/{lambda_function}/tests'):
