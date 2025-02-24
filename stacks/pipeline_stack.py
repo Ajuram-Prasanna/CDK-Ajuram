@@ -88,7 +88,7 @@ class CdkSampleStack(Stack):
         test_log_group = logs.LogGroup(self, "TestLogGroup")
 
         pipeline.add_stage(
-            stage=TestStage(self, "Test"),
+            stage=TestStage(self, "Lambda Upload"),
             pre=[
                 CodeBuildStep(
                     "CreateTestLog",
