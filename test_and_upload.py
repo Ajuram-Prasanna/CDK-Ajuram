@@ -1,6 +1,7 @@
 import os
 import zipfile
 import boto3
+import pytest
 
 lambda_client = boto3.client('lambda', region_name='ap-southeast-1')
 role_arn = 'arn:aws:iam::682853212408:role/cag-baggage-LambdaRole-bDBa4Q3CoVa4'
@@ -15,10 +16,7 @@ def zip_folder(folder_path, output_zip_path):
                 zipf.write(file_path, arcname)
 
 
-
-for lambda_function in os.listdir('lambdas'):
-    zip_file_path = f'lambdas/{lambda_function}.zip'
-    zip_folder(f'lambdas/{lambda_function}', zip_file_path)
+def upload(zip_file_path):
     with open(zip_file_path, 'rb') as zip_file:
         zip_content = zip_file.read()
     # Create or update the Lambda function
@@ -43,4 +41,18 @@ for lambda_function in os.listdir('lambdas'):
         )
         print("Lambda function updated successfully:", response)
 
-
+for lambda_function in os.listdir('lambdas'):
+    if os.path.isdir(f'lambdas/{lambda_function}/tests'):
+        status = True
+        for test_file in os.listdir(f'lambdas/{lambda_function}/tests'):
+            if pytest.main([f'lambdas/{lambda_function}/tests/{test_file}', '-q']) == 1:
+                status = False
+                break
+        if status:
+            zip_file_path = f'lambdas/{lambda_function}.zip'
+            zip_folder(f'lambdas/{lambda_function}', zip_file_path)
+            upload(zip_file_path)
+    else:
+        zip_file_path = f'lambdas/{lambda_function}.zip'
+        zip_folder(f'lambdas/{lambda_function}', zip_file_path)
+        upload(zip_file_path)
