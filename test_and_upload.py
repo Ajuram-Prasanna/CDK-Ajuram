@@ -16,7 +16,7 @@ def zip_folder(folder_path, output_zip_path):
                 zipf.write(file_path, arcname)
 
 
-def upload(zip_file_path):
+def upload(zip_file_path, lambda_function):
     with open(zip_file_path, 'rb') as zip_file:
         zip_content = zip_file.read()
     # Create or update the Lambda function
@@ -51,8 +51,8 @@ for lambda_function in os.listdir('lambdas'):
         if status:
             zip_file_path = f'lambdas/{lambda_function}.zip'
             zip_folder(f'lambdas/{lambda_function}', zip_file_path)
-            upload(zip_file_path)
+            upload(zip_file_path, lambda_function)
     else:
         zip_file_path = f'lambdas/{lambda_function}.zip'
         zip_folder(f'lambdas/{lambda_function}', zip_file_path)
-        upload(zip_file_path)
+        upload(zip_file_path, lambda_function)
