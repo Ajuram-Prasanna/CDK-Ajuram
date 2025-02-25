@@ -95,7 +95,10 @@ class CdkSampleStack(Stack):
 
 
         for lambda_name in os.listdir('lambdas'):
-            LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
+            try:
+                LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
+            except:
+                print(f"Failed to create {lambda_name}Construct")
 
 
         # pipeline.add_stage(
