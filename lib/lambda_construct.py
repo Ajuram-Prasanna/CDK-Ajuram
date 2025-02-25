@@ -25,7 +25,10 @@ class LambdaDeploymentConstruct(Construct):
         self.role_arn = 'arn:aws:iam::682853212408:role/cag-baggage-LambdaRole-bDBa4Q3CoVa4'
         self.runtime = 'python3.9'
 
-        self.delete_function(lambda_name)
+        try:
+            self.delete_function(lambda_name)
+        except:
+            pass
 
         if os.path.exists(f'lambdas/{lambda_name}/requirements.txt'):
             subprocess.check_call(['pip', 'install', '-r' f'lambdas/{lambda_name}/requirements.txt', '--target', f'lambdas/{lambda_name}'])
