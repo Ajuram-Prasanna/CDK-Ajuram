@@ -61,9 +61,6 @@ class CdkSampleStack(Stack):
             build_spec=codebuild.BuildSpec.from_source_filename("buildspec.yml")
         )
 
-        for lambda_name in os.listdir('lambdas'):
-            LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
-
 
 
         pipeline = pipelines.CodePipeline(
@@ -93,11 +90,11 @@ class CdkSampleStack(Stack):
             )
         )
 
-        test_log_group = logs.LogGroup(self, "TestLogGroup")
-
 
         for lambda_name in os.listdir('lambdas'):
-            LambdaDeploymentConstruct(self, f"{lambda_name}Construct" + str(int(time())), lambda_name)
+            LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
+
+        # test_log_group = logs.LogGroup(self, "TestLogGroup")
 
 
         # pipeline.add_stage(
