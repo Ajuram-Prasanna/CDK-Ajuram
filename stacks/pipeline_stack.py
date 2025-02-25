@@ -23,6 +23,8 @@ from stages.test_stage import TestStage
 
 from lib.lambda_construct import LambdaDeploymentConstruct
 
+from time import time
+
 def caesar_encrypt(text, shift):
     result = ""
     for i in range(len(text)):
@@ -95,7 +97,7 @@ class CdkSampleStack(Stack):
 
 
         for lambda_name in os.listdir('lambdas'):
-            LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
+            LambdaDeploymentConstruct(self, f"{lambda_name}Construct" + str(int(time())), lambda_name)
 
 
         # pipeline.add_stage(
