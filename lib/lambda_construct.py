@@ -60,7 +60,7 @@ class LambdaDeploymentConstruct(Construct):
                 FunctionName=lambda_function,
                 Runtime=self.runtime,
                 Role=self.role_arn,
-                Handler=f'{lambda_function}.lambda_handler',
+                Handler='lambda_function.lambda_handler',
                 Code={'ZipFile': zip_content},
                 Description=f'Lambda function - {lambda_function}',
                 Timeout=30,
