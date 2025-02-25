@@ -25,6 +25,8 @@ class LambdaDeploymentConstruct(Construct):
         self.role_arn = 'arn:aws:iam::682853212408:role/cag-baggage-LambdaRole-bDBa4Q3CoVa4'
         self.runtime = 'python3.9'
 
+        self.delete_function(lambda_name)
+
         if os.path.exists(f'lambdas/{lambda_name}/requirements.txt'):
             subprocess.check_call(['pip', 'install', '-r' f'lambdas/{lambda_name}/requirements.txt', '--target', f'lambdas/{lambda_name}'])
         if os.path.isdir(f'lambdas/{lambda_name}/tests'):
@@ -41,6 +43,16 @@ class LambdaDeploymentConstruct(Construct):
             zip_file_path = f'lambdas/{lambda_name}.zip'
             self.zip_folder(f'lambdas/{lambda_name}', zip_file_path)
             self.upload(zip_file_path, lambda_name)
+    
+    def delete_function(self, function_name):
+            try:
+                self.lambda_client.delete_function(FunctionName=function_name)
+                print(f"Deleted existing function: {function_name}")
+            except self.lambda_client.exceptions.ResourceNotFoundException:
+                print(f"Function does not exist: {function_name}")
+            except Exception as e:
+                print(f"Error deleting function: {function_name}, {e}")
+
 
     def zip_folder(self, folder_path, output_zip_path):
         with zipfile.ZipFile(output_zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
