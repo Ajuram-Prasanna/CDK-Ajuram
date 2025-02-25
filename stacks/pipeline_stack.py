@@ -20,10 +20,11 @@ from aws_cdk import (
 from aws_cdk.pipelines import CodePipelineSource, CodePipeline, CodeBuildOptions, CodeBuildStep
 
 from stages.test_stage import TestStage
+from stages.prod_deploy_stage import ProdDeployStage
 
 from lib.lambda_construct import LambdaDeploymentConstruct
 
-from aws_cdk.aws_codepipeline_actions import ManualApprovalAction
+from aws_cdk.pipelines import ManualApprovalStep
 
 from time import time
 
@@ -92,11 +93,8 @@ class CdkSampleStack(Stack):
             )
         )
 
-        manual_approval_action = ManualApprovalAction(
-            action_name="ApproveDeployment",
-            run_order=1
-        )
-        pipeline.add_stage(
-            stage_name="ManualApprovalStage",
-            actions=[manual_approval_action]
+        prod_deploy_stage = ProdDeployStage(self, "ProdDeployStage")
+
+        pipeline.add_stage(prod_deploy_stage,
+            pre=[pipelines.ManualApprovalStep("PromoteToProd")]
         )
