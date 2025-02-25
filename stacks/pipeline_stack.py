@@ -19,7 +19,6 @@ from aws_cdk import (
 
 from aws_cdk.pipelines import CodePipelineSource, CodePipeline, CodeBuildOptions, CodeBuildStep
 
-from stages.test_stage import TestStage
 from stages.prod_deploy_stage import ProdDeployStage
 
 from lib.lambda_construct import LambdaDeploymentConstruct
@@ -95,6 +94,11 @@ class CdkSampleStack(Stack):
 
         prod_deploy_stage = ProdDeployStage(self, "ProdDeployStage")
 
+        log_group = logs.LogGroup(self, "ApprovalLogGroup")
+
+        log_group.add_stream("ApprovalLogStream")
+
         pipeline.add_stage(prod_deploy_stage,
             pre=[pipelines.ManualApprovalStep("PromoteToProd")]
         )
+        
