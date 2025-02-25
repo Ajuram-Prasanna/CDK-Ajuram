@@ -89,3 +89,5 @@ class LambdaDeploymentConstruct(Construct):
                 Publish=True
             )
             print("Lambda function updated successfully:", response)
+        except:
+            pass
