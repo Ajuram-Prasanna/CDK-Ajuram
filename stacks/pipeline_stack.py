@@ -41,7 +41,7 @@ def caesar_decrypt(text, shift):
     return caesar_encrypt(text, -shift)
 
 class CdkSampleStack(Stack):
-    def __init__(self, scope: Construct, id: str, **kwargs) -> None:
+    def __init__(self, scope: Construct, id: str, config, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
         
@@ -90,6 +90,8 @@ class CdkSampleStack(Stack):
             )
         )
 
+        print("#" * 30)
+        print(config)
 
         for lambda_name in os.listdir('lambdas'):
             LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
