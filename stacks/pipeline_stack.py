@@ -6,6 +6,7 @@ from aws_cdk import (
     aws_logs as logs,
     Stage
 )
+import os
 from constructs import Construct
 from aws_cdk.pipelines import CodePipelineSource
 import boto3
@@ -19,6 +20,8 @@ from aws_cdk import (
 from aws_cdk.pipelines import CodePipelineSource, CodePipeline, CodeBuildOptions, CodeBuildStep
 
 from stages.test_stage import TestStage
+
+from lib.lambda_construct import LambdaDeploymentConstruct
 
 def caesar_encrypt(text, shift):
     result = ""
@@ -46,15 +49,18 @@ class CdkSampleStack(Stack):
 
         # Define the build project with logging
         build_project = codebuild.PipelineProject(self, "BuildProject",
-        logging=codebuild.LoggingOptions(
-            cloud_watch=codebuild.CloudWatchLoggingOptions(
-                enabled=True,
-                log_group=log_group,
-                prefix="build-log"
-            )
-        ),
-        build_spec=codebuild.BuildSpec.from_source_filename("buildspec.yml")
-    )
+            logging=codebuild.LoggingOptions(
+                cloud_watch=codebuild.CloudWatchLoggingOptions(
+                    enabled=True,
+                    log_group=log_group,
+                    prefix="build-log"
+                )
+            ),
+            build_spec=codebuild.BuildSpec.from_source_filename("buildspec.yml")
+        )
+
+        for lambda_name in os.listdir('lambdas'):
+            LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
 
 
 
@@ -87,21 +93,26 @@ class CdkSampleStack(Stack):
 
         test_log_group = logs.LogGroup(self, "TestLogGroup")
 
-        pipeline.add_stage(
-            stage=TestStage(self, "Lambda-Upload"),
-            pre=[
-                CodeBuildStep(
-                    "CreateTestLog",
-                    commands = [
-                        "pip install -r requirements.txt",
-                        "python test_and_upload.py"],
-                    logging=codebuild.LoggingOptions(
-                        cloud_watch=codebuild.CloudWatchLoggingOptions(
-                            enabled=True,
-                            log_group=test_log_group,
-                            prefix="test-log"
-                        )
-                    )
-                )
-            ]
-        )
+
+        for lambda_name in os.listdir('lambdas'):
+            LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
+
+
+        # pipeline.add_stage(
+        #     stage=TestStage(self, "Lambda-Upload"),
+        #     pre=[
+        #         CodeBuildStep(
+        #             "CreateTestLog",
+        #             commands = [
+        #                 "pip install -r requirements.txt",
+        #                 "python test_and_upload.py"],
+        #             logging=codebuild.LoggingOptions(
+        #                 cloud_watch=codebuild.CloudWatchLoggingOptions(
+        #                     enabled=True,
+        #                     log_group=test_log_group,
+        #                     prefix="test-log"
+        #                 )
+        #             )
+        #         )
+        #     ]
+        # )

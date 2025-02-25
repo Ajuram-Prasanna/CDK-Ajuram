@@ -1,0 +1,15 @@
+{
+  "CDK_ENV": "dev",
+    "dev": {
+      "account": "111111111111",
+      "region": "us-east-1",
+      "instanceType": "t3.micro",
+      "databaseSize": "10GB"
+    },
+    "prod": {
+      "account": "222222222222",
+      "region": "us-west-1",
+      "instanceType": "t3.large",
+      "databaseSize": "100GB"
+    }
+}
