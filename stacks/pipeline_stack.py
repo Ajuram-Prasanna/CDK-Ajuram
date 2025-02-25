@@ -23,6 +23,8 @@ from stages.test_stage import TestStage
 
 from lib.lambda_construct import LambdaDeploymentConstruct
 
+from aws_cdk.aws_codepipeline_actions import ManualApprovalAction
+
 from time import time
 
 def caesar_encrypt(text, shift):
@@ -90,30 +92,11 @@ class CdkSampleStack(Stack):
             )
         )
 
-        print("#" * 30)
-        print(config)
-
-        for lambda_name in os.listdir('lambdas'):
-            LambdaDeploymentConstruct(self, f"{lambda_name}Construct", lambda_name)
-
-        # test_log_group = logs.LogGroup(self, "TestLogGroup")
-
-
-        # pipeline.add_stage(
-        #     stage=TestStage(self, "Lambda-Upload"),
-        #     pre=[
-        #         CodeBuildStep(
-        #             "CreateTestLog",
-        #             commands = [
-        #                 "pip install -r requirements.txt",
-        #                 "python test_and_upload.py"],
-        #             logging=codebuild.LoggingOptions(
-        #                 cloud_watch=codebuild.CloudWatchLoggingOptions(
-        #                     enabled=True,
-        #                     log_group=test_log_group,
-        #                     prefix="test-log"
-        #                 )
-        #             )
-        #         )
-        #     ]
-        # )
+        manual_approval_action = ManualApprovalAction(
+            action_name="ApproveDeployment",
+            run_order=1
+        )
+        pipeline.add_stage(
+            stage_name="ManualApprovalStage",
+            actions=[manual_approval_action]
+        )
